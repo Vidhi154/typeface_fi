@@ -1,93 +1,60 @@
-<h1 align="center">💰 Personal Finance Assistant</h1>
+# 💰 Personal Finance Assistant  
 
-<p align="center">
-A full-stack web application to track, manage, and visualize your financial activities.<br/>
-Built with <b>React, Node.js, MongoDB, TailwindCSS, and JWT Auth</b>.
-</p>
-
----
-
-## ✨ Overview  
-
-Managing finances can be confusing and time-consuming. This app simplifies money management by:  
-- ✅ Tracking **income & expenses**  
-- ✅ Extracting totals/dates from **uploaded receipts (OCR)**  
-- ✅ Generating **charts & insights** to visualize spending  
-- ✅ Supporting **secure multi-user authentication**  
-
-> 🔥 Designed with **clean code, scalability, and modern web practices** — perfect for real-world use.  
+A **full-stack web application** to track, manage, and visualize your financial activities. Users can log income & expenses, upload receipts (with OCR support), and gain insights from interactive charts.  
 
 ---
 
 ## 🚀 Tech Stack  
 
-**Frontend** 🎨  
-- ⚛️ React (Hooks, Router, Context API for Auth)  
-- 🎨 Tailwind CSS  
-- 🔗 Axios  
-- 📊 Chart.js / react-chartjs-2  
+### 🎨 Frontend  
+- ⚛️ **React** (Hooks, Router, Context API for Auth)  
+- 🎨 **Tailwind CSS** (utility-first styling)  
+- 🔗 **Axios** (API communication)  
+- 📊 **Chart.js / react-chartjs-2** (financial graphs & insights)  
 
-**Backend** 🖥️  
-- 🟢 Node.js + Express (REST APIs)  
-- 📦 Mongoose (MongoDB ODM)  
-- 📤 Multer (file uploads)  
-- 🔍 Tesseract.js / AWS Textract (OCR, optional)  
+### 🖥️ Backend  
+- 🟢 **Node.js + Express** (REST API)  
+- 📦 **Mongoose** (MongoDB ODM)  
+- 📤 **Multer** (file uploads for receipts)  
+- 🔍 *(Optional)* **Tesseract.js / AWS Textract** (OCR for receipt scanning)  
 
-**Database** 🗄️  
-- 🍃 MongoDB  
+### 🗄️ Database  
+- 🍃 **MongoDB**  
 
-**Authentication & Security** 🔐  
-- 🔑 JWT (JSON Web Tokens)  
-- 🛡️ bcrypt (password hashing)  
+### 🔐 Authentication & Security  
+- 🔑 **JWT (JSON Web Tokens)**  
+- 🛡️ **bcrypt** (password hashing)  
 
-**Dev Tools** 🛠️  
-- 🔄 nodemon (backend auto-reload)  
-- ⚙️ dotenv (env management)  
+### 🛠️ Dev Tools  
+- 🔄 **nodemon** (backend auto-reload)  
+- ⚙️ **dotenv** (environment variables)  
 
 ---
-my-fullstack-app/
-│── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # App pages (Dashboard, Login, Register)
-│   │   ├── contexts/       # Context API (Auth, State Management)
-│   │   └── api/            # Axios API utilities
-│   └── public/
-│
-│── server/                 # Node + Express backend
-│   ├── models/             # Mongoose models (User, Transaction, Receipt)
-│   ├── routes/             # API routes (auth, transactions, receipts)
-│   ├── controllers/        # API logic
-│   ├── middleware/         # JWT auth middleware
-│   └── uploads/            # Uploaded receipts
-│
-│── .env                    # Environment variables
-│── package.json
-│── README.md
 
+## ✨ Features  
 
-## 🖼️ How It Works  
+✅ Add / Edit / Delete **Income & Expense entries**  
+✅ View transactions by **date range**  
+✅ **Graphs & Charts**: Spending trends, expenses by category, income vs expenses  
+✅ Upload receipts & auto-extract expenses via **OCR**  
+✅ Multi-user support with **JWT Auth**  
+✅ Bonus: Import transaction history from **PDF**  
+✅ Bonus: Pagination for large transaction lists  
+
+---
+
+## 📊 How It Works  
 
 ```mermaid
 graph TD
-    A[👤 User] -->|Registers / Logs In| B[🔑 Auth Service]
-    A -->|Adds Income / Expense| C[📝 Transaction API]
+    A[👤 User] -->|Logs In / Registers| B[🔑 Auth Service]
+    A -->|Adds Expense / Income| C[📝 Transaction API]
     A -->|Uploads Receipt| D[🖼️ Multer + OCR]
     C --> E[🍃 MongoDB Database]
     D --> C
     E --> F[📊 Chart.js Visualizations]
     F --> A
 
-
-
-## ✨ Features
-
-- 📊 **Track Income & Expenses** - Add and manage all your transactions
-- 📈 **Beautiful Charts** - View spending patterns with interactive graphs
-- 📷 **Receipt Scanner** - Upload receipts to automatically extract expense data
-- 📑 **PDF Import** - Process bank statements and transaction history
-- 👥 **Multi-User Support** - Secure login system for multiple users
-- 📱 **Mobile Friendly** - Works great on all devices
 
 ## 🚀 Quick Setup
 
@@ -168,15 +135,26 @@ POST /api/upload/pdf
 ## 📁 Project Structure
 
 ```
-├── frontend/
+my-fullstack-app/
+│── frontend/                 # Frontend (React)
 │   ├── src/
-│   │   ├── components/     # React components
-│   │   ├── pages/          # Main pages
-│   │   └── context/        # Auth context
-├── backend/
-│   ├── models/             # Database models
-│   ├── routes/             # API routes
-│   └── controllers/        # Business logic
+│   │   ├── components/     # UI components
+│   │   ├── pages/          # Routes/pages
+│   │   ├── contexts/       # AuthContext, Global State
+│   │   └── api/            # Axios setup
+│   └── public/
+│
+│── backend/                 # Backend (Node + Express)
+│   ├── models/             # Mongoose models
+│   ├── routes/             # Express routes (auth, receipts, transactions)
+│   ├── middleware/         # JWT auth middleware
+│   └── uploads/            # Receipt uploads
+│
+│── .env                    # Environment variables
+│── package.json
+│── README.md
+
+
 ```
 
 ## 🎯 Key Features Explained
@@ -198,6 +176,7 @@ POST /api/upload/pdf
 - **Expense breakdown** by category
 - **Monthly comparisons** 
 - **Savings rate** calculations
+
 
 
 
