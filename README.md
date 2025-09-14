@@ -45,6 +45,26 @@ Managing finances can be confusing and time-consuming. This app simplifies money
 - ⚙️ dotenv (env management)  
 
 ---
+my-fullstack-app/
+│── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/     # Reusable UI components
+│   │   ├── pages/          # App pages (Dashboard, Login, Register)
+│   │   ├── contexts/       # Context API (Auth, State Management)
+│   │   └── api/            # Axios API utilities
+│   └── public/
+│
+│── server/                 # Node + Express backend
+│   ├── models/             # Mongoose models (User, Transaction, Receipt)
+│   ├── routes/             # API routes (auth, transactions, receipts)
+│   ├── controllers/        # API logic
+│   ├── middleware/         # JWT auth middleware
+│   └── uploads/            # Uploaded receipts
+│
+│── .env                    # Environment variables
+│── package.json
+│── README.md
+
 
 ## 🖼️ How It Works  
 
@@ -57,3 +77,4 @@ graph TD
     D --> C
     E --> F[📊 Chart.js Visualizations]
     F --> A
+
