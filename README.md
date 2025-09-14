@@ -55,7 +55,7 @@ graph TD
     E --> F[📊 Chart.js Visualizations]
     F --> A
 
-
+```
 ## 🚀 Quick Setup
 
 ### 1. Clone the project
@@ -176,6 +176,7 @@ my-fullstack-app/
 - **Expense breakdown** by category
 - **Monthly comparisons** 
 - **Savings rate** calculations
+
 
 
 
