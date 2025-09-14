@@ -91,10 +91,10 @@ export default function TransactionForm({ onCreated }) {
       setError('Please select a date');
       return false;
     }
-    // Check if date is not in the future
+    
     const selectedDate = new Date(form.date);
     const today = new Date();
-    today.setHours(23, 59, 59, 999); // End of today
+    today.setHours(23, 59, 59, 999); 
     if (selectedDate > today) {
       setError('Date cannot be in the future');
       return false;
@@ -133,10 +133,10 @@ export default function TransactionForm({ onCreated }) {
       
       setSuccessMessage(`${form.type === 'income' ? 'Income' : 'Expense'} added successfully!`);
       
-      // Call parent callback
+      
       if (onCreated) onCreated();
 
-      // Clear success message after 3 seconds
+      
       setTimeout(() => setSuccessMessage(null), 3000);
       
     } catch (err) {
@@ -149,7 +149,7 @@ export default function TransactionForm({ onCreated }) {
 
   const handleInputChange = (field, value) => {
     setForm(prev => ({ ...prev, [field]: value }));
-    // Clear error and success messages when user starts typing
+   
     if (error) setError(null);
     if (successMessage) setSuccessMessage(null);
   };
@@ -160,8 +160,8 @@ export default function TransactionForm({ onCreated }) {
   };
 
   const handleAmountChange = (e) => {
-    const value = e.target.value.replace(/[^\d.]/g, ''); // Only allow digits and decimal
-    if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) { // Max 2 decimal places
+    const value = e.target.value.replace(/[^\d.]/g, ''); 
+    if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) { 
       handleInputChange('amount', value);
     }
   };

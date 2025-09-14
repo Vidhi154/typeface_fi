@@ -103,7 +103,7 @@ export default function Register() {
         password: form.password
       });
 
-      // Auto-login after successful registration
+      
       login(response.data.token, response.data.user);
       navigate('/dashboard', { replace: true });
     } catch (err) {
@@ -119,7 +119,7 @@ export default function Register() {
 
   const handleInputChange = (field, value) => {
     setForm(prev => ({ ...prev, [field]: value }));
-    if (error) setError(null); // clear error when typing
+    if (error) setError(null); 
   };
 
   const getPasswordStrength = (password) => {

@@ -24,7 +24,7 @@ export default function TransactionsPage() {
   const [pages, setPages] = useState(1);
   const limit = 5;
 
-  // Build query string based on filter
+  
   const buildQuery = (filter) => {
     let startDate;
     const now = new Date();

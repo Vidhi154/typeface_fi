@@ -149,7 +149,7 @@ export default function TransactionList({
                 }`}
               >
                 <div className="flex items-center space-x-4">
-                  {/* Transaction Type Icon */}
+                  
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center text-lg ${getTransactionColor(tx.type)}`}>
                     {getTransactionIcon(tx.type)}
                   </div>

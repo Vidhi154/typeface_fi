@@ -15,7 +15,7 @@ export default function ProtectedRoute({ children, requireAuth = true }) {
   const { user, isLoading } = useContext(AuthContext);
   const location = useLocation();
 
-  // Show loading spinner while checking authentication
+  
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -27,7 +27,7 @@ export default function ProtectedRoute({ children, requireAuth = true }) {
     );
   }
 
-  // Redirect to login if authentication is required but user is not authenticated
+  
   if (requireAuth && !user) {
     return (
       <Navigate 

@@ -178,7 +178,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Summary Cards */}
+        
         <FinancialSummaryCards summary={financialSummary} />
 
         {/* Main Content */}
