@@ -1,6 +1,16 @@
 # 💰 Personal Finance Assistant  
 
 A **full-stack web application** to track, manage, and visualize your financial activities. Users can log income & expenses, upload receipts (with OCR support), and gain insights from interactive charts.  
+---
+--images--
+<img width="1902" height="953" alt="image" src="https://github.com/user-attachments/assets/08b5d501-ee3e-41ae-b131-48b75553fbea" />
+
+<img width="1883" height="946" alt="image" src="https://github.com/user-attachments/assets/567b3e02-eb05-4cd5-a21a-550e2c0292d4" />
+<img width="1885" height="953" alt="image" src="https://github.com/user-attachments/assets/5de76aed-b8f2-4b7a-9a98-899e632c9c0c" />
+<img width="1919" height="947" alt="image" src="https://github.com/user-attachments/assets/f516e6c1-f503-4912-922f-f0c612d96953" />
+<img width="1913" height="838" alt="image" src="https://github.com/user-attachments/assets/78e6edce-b16a-46e6-8d64-04ee39109188" />
+<img width="1919" height="944" alt="image" src="https://github.com/user-attachments/assets/fb2e2c04-b21e-4594-ae5f-2917bd15897a" />
+
 
 ---
 
@@ -176,6 +186,7 @@ my-fullstack-app/
 - **Expense breakdown** by category
 - **Monthly comparisons** 
 - **Savings rate** calculations
+
 
 
 
