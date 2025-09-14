@@ -1,56 +1,85 @@
-import React, { useState } from 'react';
-import api from '../api/api';
+import React, { useState, useContext } from "react";
+import api from "../api/api";
+import { AuthContext } from "../contexts/AuthContext";
 
-export default function ReceiptUpload({ onUploaded }) {
+export default function ReceiptUpload({ onUpload }) {
   const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState(null);
+  const [extractedData, setExtractedData] = useState(null);
+  const { user } = useContext(AuthContext);
 
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-    setMessage(null);
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    setExtractedData(null);
+
+    if (selectedFile && selectedFile.type.startsWith("image/")) {
+      setPreview(URL.createObjectURL(selectedFile));
+    } else {
+      setPreview(null);
+    }
   };
 
   const handleUpload = async () => {
-    if (!file) {
-      setMessage('Please select a file first');
-      return;
-    }
+    if (!file) return alert("Please select a file");
 
     const formData = new FormData();
-    formData.append('receipt', file);
+    formData.append("receipt", file);
 
     try {
-      setUploading(true);
-      const res = await api.post('/receipts/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      setLoading(true);
+      const res = await api.post("/receipts/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
       });
-      setMessage('Receipt uploaded successfully!');
+
+      setExtractedData({
+        fileName: res.data.fileName,
+        date: res.data.date,
+        total: res.data.total,
+        rawText: res.data.rawText
+      });
+
+      if (onUpload) onUpload(res.data);
+
       setFile(null);
-      if (onUploaded) onUploaded(res.data.transaction); // refresh transaction list
+      setPreview(null);
+      console.log("✅ Upload success:", res.data);
     } catch (err) {
-      console.error(err);
-      setMessage('Failed to upload receipt');
+      console.error("❌ Upload failed:", err.response?.data || err.message);
     } finally {
-      setUploading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="p-4 border rounded mb-6 bg-white shadow-sm">
-      <h3 className="font-semibold mb-3">Upload Receipt</h3>
-
-      <input type="file" accept="image/*,application/pdf" onChange={handleFileChange} className="mb-2" />
-
+    <div className="mb-6">
+      <input type="file" onChange={handleFileChange} className="mb-2" />
       <button
         onClick={handleUpload}
-        disabled={uploading}
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+        disabled={loading}
+        className="bg-blue-600 text-white px-4 py-2 rounded"
       >
-        {uploading ? 'Uploading...' : 'Upload'}
+        {loading ? "Uploading..." : "Upload Receipt"}
       </button>
 
-      {message && <p className="mt-2 text-sm text-gray-700">{message}</p>}
+      {preview && (
+        <div className="mt-4">
+          <img src={preview} alt="Receipt Preview" className="max-w-xs border rounded" />
+        </div>
+      )}
+
+      {extractedData && (
+        <div className="mt-4 p-3 border rounded bg-gray-50">
+          <p><strong>File:</strong> {extractedData.fileName}</p>
+          <p><strong>Date:</strong> {extractedData.date || "Not detected"}</p>
+          <p><strong>Total:</strong> {extractedData.total != null ? `$${extractedData.total}` : "Not detected"}</p>
+          <div className="mt-2 p-2 border bg-white rounded max-h-48 overflow-y-auto">
+            <strong>Detected Text:</strong>
+            <pre className="text-xs">{extractedData.rawText}</pre>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
