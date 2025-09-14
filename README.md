@@ -78,6 +78,8 @@ graph TD
     E --> F[📊 Chart.js Visualizations]
     F --> A
 
+
+
 ## ✨ Features
 
 - 📊 **Track Income & Expenses** - Add and manage all your transactions
@@ -196,6 +198,7 @@ POST /api/upload/pdf
 - **Expense breakdown** by category
 - **Monthly comparisons** 
 - **Savings rate** calculations
+
 
 
 
