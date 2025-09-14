@@ -2,6 +2,13 @@
 
 A **full-stack web application** to track, manage, and visualize your financial activities. Users can log income & expenses, upload receipts (with OCR support), and gain insights from interactive charts.  
 ---
+video --
+
+
+
+https://github.com/user-attachments/assets/2495ddc5-d83a-496a-bd60-1fb920ad2f12
+
+---
 --images--
 <img width="1902" height="953" alt="image" src="https://github.com/user-attachments/assets/08b5d501-ee3e-41ae-b131-48b75553fbea" />
 
@@ -186,6 +193,7 @@ my-fullstack-app/
 - **Expense breakdown** by category
 - **Monthly comparisons** 
 - **Savings rate** calculations
+
 
 
 
