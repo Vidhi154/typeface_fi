@@ -1,35 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, Area, AreaChart } from 'recharts';
+import { TrendingUp, TrendingDown, DollarSign, CreditCard, PiggyBank, Calendar } from 'lucide-react';
 
-// Color palette for charts
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1', '#d084d0'];
+const COLORS = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#84CC16'];
 
-// Chart for expenses by category (Pie Chart)
 export function ChartExpensesByCategory({ data = [] }) {
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">Expenses by Category</h3>
-        <div className="flex items-center justify-center h-64 text-gray-500">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
+        <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+          Spending Breakdown
+        </h3>
+        <div className="flex items-center justify-center h-64 text-gray-400">
           <div className="text-center">
-            <div className="text-4xl mb-2">📊</div>
-            <p>No expense data available</p>
+            <CreditCard className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+            <p className="text-sm">No expenses recorded yet</p>
           </div>
         </div>
       </div>
     );
   }
 
-  // Filter and format data for expenses only
   const expenseData = data
-    .filter(item => item.type === 'expense' || !item.type) // Include items without type (assume expense)
+    .filter(item => item.type === 'expense' || !item.type)
     .map(item => ({
       name: item.category || item._id,
       value: Math.abs(item.total || item.totalAmount || 0),
-      percentage: 0 // Will calculate below
+      percentage: 0
     }));
 
-  // Calculate percentages
   const totalExpenses = expenseData.reduce((sum, item) => sum + item.value, 0);
   expenseData.forEach(item => {
     item.percentage = totalExpenses > 0 ? ((item.value / totalExpenses) * 100).toFixed(1) : 0;
@@ -39,13 +39,13 @@ export function ChartExpensesByCategory({ data = [] }) {
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-medium text-gray-800">{data.payload.name}</p>
-          <p className="text-blue-600">
-            Amount: ₹{new Intl.NumberFormat('en-IN').format(data.value)}
+        <div className="bg-white p-4 border border-gray-100 rounded-xl shadow-lg backdrop-blur-sm">
+          <p className="font-semibold text-gray-800 mb-1">{data.payload.name}</p>
+          <p className="text-blue-600 font-medium">
+            ₹{new Intl.NumberFormat('en-IN').format(data.value)}
           </p>
-          <p className="text-gray-600">
-            {data.payload.percentage}% of total expenses
+          <p className="text-gray-500 text-sm mt-1">
+            {data.payload.percentage}% of total spending
           </p>
         </div>
       );
@@ -54,28 +54,37 @@ export function ChartExpensesByCategory({ data = [] }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-800">Expenses by Category</h3>
-        <div className="text-sm text-gray-500">
-          Total: ₹{new Intl.NumberFormat('en-IN').format(totalExpenses)}
+    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+          Spending Breakdown
+        </h3>
+        <div className="bg-gray-50 px-3 py-1 rounded-full">
+          <span className="text-sm font-medium text-gray-600">
+            Total: ₹{new Intl.NumberFormat('en-IN', { notation: 'compact' }).format(totalExpenses)}
+          </span>
         </div>
       </div>
       
-      <div className="h-64">
+      <div className="h-72 mb-6">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={expenseData}
               cx="50%"
               cy="50%"
-              outerRadius={80}
+              innerRadius={60}
+              outerRadius={120}
+              paddingAngle={2}
               dataKey="value"
-              label={({ name, percentage }) => `${name} (${percentage}%)`}
-              labelLine={false}
             >
               {expenseData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={COLORS[index % COLORS.length]}
+                  className="hover:opacity-80 transition-opacity cursor-pointer"
+                />
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
@@ -83,15 +92,22 @@ export function ChartExpensesByCategory({ data = [] }) {
         </ResponsiveContainer>
       </div>
 
-      {/* Legend */}
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {expenseData.slice(0, 8).map((entry, index) => (
-          <div key={entry.name} className="flex items-center text-sm">
-            <div 
-              className="w-3 h-3 rounded-full mr-2"
-              style={{ backgroundColor: COLORS[index % COLORS.length] }}
-            ></div>
-            <span className="truncate">{entry.name}</span>
+      <div className="space-y-3">
+        {expenseData.slice(0, 5).map((entry, index) => (
+          <div key={entry.name} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+            <div className="flex items-center gap-3">
+              <div 
+                className="w-4 h-4 rounded-full flex-shrink-0"
+                style={{ backgroundColor: COLORS[index % COLORS.length] }}
+              ></div>
+              <span className="font-medium text-gray-700">{entry.name}</span>
+            </div>
+            <div className="text-right">
+              <div className="font-semibold text-gray-800">
+                ₹{new Intl.NumberFormat('en-IN', { notation: 'compact' }).format(entry.value)}
+              </div>
+              <div className="text-xs text-gray-500">{entry.percentage}%</div>
+            </div>
           </div>
         ))}
       </div>
@@ -99,16 +115,18 @@ export function ChartExpensesByCategory({ data = [] }) {
   );
 }
 
-// Monthly spending trend chart
 export function MonthlySpendingChart({ data = [] }) {
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">Monthly Spending Trend</h3>
-        <div className="flex items-center justify-center h-64 text-gray-500">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 col-span-2">
+        <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+          Financial Trends
+        </h3>
+        <div className="flex items-center justify-center h-64 text-gray-400">
           <div className="text-center">
-            <div className="text-4xl mb-2">📈</div>
-            <p>No monthly data available</p>
+            <TrendingUp className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+            <p className="text-sm">No trend data available</p>
           </div>
         </div>
       </div>
@@ -118,12 +136,19 @@ export function MonthlySpendingChart({ data = [] }) {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-medium text-gray-800">{label}</p>
+        <div className="bg-white p-4 border border-gray-100 rounded-xl shadow-lg backdrop-blur-sm">
+          <p className="font-semibold text-gray-800 mb-2">{label}</p>
           {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color }}>
-              {entry.name}: ₹{new Intl.NumberFormat('en-IN').format(entry.value)}
-            </p>
+            <div key={index} className="flex items-center gap-2 mb-1">
+              <div 
+                className="w-3 h-3 rounded-full" 
+                style={{ backgroundColor: entry.color }}
+              ></div>
+              <span className="text-sm font-medium text-gray-600">{entry.name}:</span>
+              <span className="font-semibold text-gray-800">
+                ₹{new Intl.NumberFormat('en-IN').format(entry.value)}
+              </span>
+            </div>
           ))}
         </div>
       );
@@ -132,40 +157,66 @@ export function MonthlySpendingChart({ data = [] }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">Monthly Spending Trend</h3>
+    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 col-span-2 hover:shadow-md transition-shadow duration-300">
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+          Financial Trends
+        </h3>
+        <div className="flex gap-4 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+            <span className="text-gray-600">Income</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+            <span className="text-gray-600">Expenses</span>
+          </div>
+        </div>
+      </div>
       
-      <div className="h-64">
+      <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
+          <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 20 }}>
+            <defs>
+              <linearGradient id="incomeGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.05}/>
+              </linearGradient>
+              <linearGradient id="expenseGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#EF4444" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#EF4444" stopOpacity={0.05}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
             <XAxis 
               dataKey="month" 
-              tick={{ fontSize: 12 }}
-              angle={-45}
-              textAnchor="end"
-              height={70}
+              tick={{ fontSize: 12, fill: '#6B7280' }}
+              axisLine={false}
+              tickLine={false}
             />
             <YAxis 
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: '#6B7280' }}
+              axisLine={false}
+              tickLine={false}
               tickFormatter={(value) => `₹${new Intl.NumberFormat('en-IN', { notation: 'compact' }).format(value)}`}
             />
             <Tooltip content={<CustomTooltip />} />
             <Area
               type="monotone"
-              dataKey="expenses"
-              stackId="1"
-              stroke="#ef4444"
-              fill="#fecaca"
-              name="Expenses"
+              dataKey="income"
+              stroke="#3B82F6"
+              fill="url(#incomeGradient)"
+              name="Income"
+              strokeWidth={3}
             />
             <Area
               type="monotone"
-              dataKey="income"
-              stackId="2"
-              stroke="#10b981"
-              fill="#bbf7d0"
-              name="Income"
+              dataKey="expenses"
+              stroke="#EF4444"
+              fill="url(#expenseGradient)"
+              name="Expenses"
+              strokeWidth={3}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -174,16 +225,18 @@ export function MonthlySpendingChart({ data = [] }) {
   );
 }
 
-// Income vs Expenses comparison
 export function IncomeVsExpensesChart({ data = [] }) {
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-sm border">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">Income vs Expenses</h3>
-        <div className="flex items-center justify-center h-64 text-gray-500">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+        <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+          Income vs Expenses
+        </h3>
+        <div className="flex items-center justify-center h-64 text-gray-400">
           <div className="text-center">
-            <div className="text-4xl mb-2">💰</div>
-            <p>No comparison data available</p>
+            <DollarSign className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+            <p className="text-sm">No comparison data</p>
           </div>
         </div>
       </div>
@@ -194,21 +247,29 @@ export function IncomeVsExpensesChart({ data = [] }) {
     if (active && payload && payload.length) {
       const income = payload.find(p => p.dataKey === 'income')?.value || 0;
       const expenses = payload.find(p => p.dataKey === 'expenses')?.value || 0;
-      const savings = income - expenses;
+      const netResult = income - expenses;
       
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-medium text-gray-800 mb-2">{label}</p>
-          <p className="text-green-600">
-            Income: ₹{new Intl.NumberFormat('en-IN').format(income)}
-          </p>
-          <p className="text-red-600">
-            Expenses: ₹{new Intl.NumberFormat('en-IN').format(expenses)}
-          </p>
-          <hr className="my-2" />
-          <p className={`font-semibold ${savings >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-            {savings >= 0 ? 'Savings' : 'Deficit'}: ₹{new Intl.NumberFormat('en-IN').format(Math.abs(savings))}
-          </p>
+        <div className="bg-white p-4 border border-gray-100 rounded-xl shadow-lg backdrop-blur-sm">
+          <p className="font-semibold text-gray-800 mb-3">{label}</p>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-green-600 font-medium">Income:</span>
+              <span className="font-semibold">₹{new Intl.NumberFormat('en-IN').format(income)}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-red-600 font-medium">Expenses:</span>
+              <span className="font-semibold">₹{new Intl.NumberFormat('en-IN').format(expenses)}</span>
+            </div>
+            <div className="border-t border-gray-200 pt-2 mt-2">
+              <div className="flex justify-between items-center">
+                <span className={`font-medium ${netResult >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {netResult >= 0 ? 'Surplus:' : 'Deficit:'}
+                </span>
+                <span className="font-bold">₹{new Intl.NumberFormat('en-IN').format(Math.abs(netResult))}</span>
+              </div>
+            </div>
+          </div>
         </div>
       );
     }
@@ -216,28 +277,43 @@ export function IncomeVsExpensesChart({ data = [] }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border">
-      <h3 className="text-lg font-semibold mb-4 text-gray-800">Income vs Expenses</h3>
+    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300">
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+          Monthly Comparison
+        </h3>
+      </div>
       
-      <div className="h-64">
+      <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} barCategoryGap="20%">
-            <CartesianGrid strokeDasharray="3 3" />
+          <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }} barGap={10}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#F3F4F6" />
             <XAxis 
               dataKey="month" 
-              tick={{ fontSize: 12 }}
-              angle={-45}
-              textAnchor="end"
-              height={70}
+              tick={{ fontSize: 12, fill: '#6B7280' }}
+              axisLine={false}
+              tickLine={false}
             />
             <YAxis 
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 12, fill: '#6B7280' }}
+              axisLine={false}
+              tickLine={false}
               tickFormatter={(value) => `₹${new Intl.NumberFormat('en-IN', { notation: 'compact' }).format(value)}`}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            <Bar dataKey="income" fill="#10b981" name="Income" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="expenses" fill="#ef4444" name="Expenses" radius={[4, 4, 0, 0]} />
+            <Bar 
+              dataKey="income" 
+              fill="#10B981"
+              name="Income"
+              radius={[4, 4, 0, 0]}
+            />
+            <Bar 
+              dataKey="expenses" 
+              fill="#EF4444"
+              name="Expenses"
+              radius={[4, 4, 0, 0]}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -245,7 +321,6 @@ export function IncomeVsExpensesChart({ data = [] }) {
   );
 }
 
-// Financial Summary Cards
 export function FinancialSummaryCards({ summary = {} }) {
   const {
     totalIncome = 0,
@@ -257,68 +332,75 @@ export function FinancialSummaryCards({ summary = {} }) {
 
   const netSavings = totalIncome - totalExpenses;
   const monthlyNet = currentMonthIncome - currentMonthExpenses;
-  const avgTransaction = transactionCount > 0 ? (totalIncome + totalExpenses) / transactionCount : 0;
+  const savingsRate = totalIncome > 0 ? ((netSavings / totalIncome) * 100).toFixed(1) : 0;
 
   const cards = [
     {
       title: 'Total Income',
       value: totalIncome,
-      icon: '💰',
-      color: 'text-green-600',
+      icon: TrendingUp,
+      color: 'bg-green-500',
       bgColor: 'bg-green-50',
-      borderColor: 'border-green-200'
+      change: '+12.5%'
     },
     {
       title: 'Total Expenses',
       value: totalExpenses,
-      icon: '💸',
-      color: 'text-red-600',
+      icon: CreditCard,
+      color: 'bg-red-500',
       bgColor: 'bg-red-50',
-      borderColor: 'border-red-200'
+      change: '+8.2%'
     },
     {
       title: 'Net Savings',
       value: netSavings,
-      icon: netSavings >= 0 ? '📈' : '📉',
-      color: netSavings >= 0 ? 'text-green-600' : 'text-red-600',
-      bgColor: netSavings >= 0 ? 'bg-green-50' : 'bg-red-50',
-      borderColor: netSavings >= 0 ? 'border-green-200' : 'border-red-200'
+      icon: PiggyBank,
+      color: netSavings >= 0 ? 'bg-blue-500' : 'bg-orange-500',
+      bgColor: netSavings >= 0 ? 'bg-blue-50' : 'bg-orange-50',
+      change: `${savingsRate}% rate`
     },
     {
       title: 'This Month',
       value: monthlyNet,
-      icon: '📅',
-      color: monthlyNet >= 0 ? 'text-blue-600' : 'text-orange-600',
-      bgColor: monthlyNet >= 0 ? 'bg-blue-50' : 'bg-orange-50',
-      borderColor: monthlyNet >= 0 ? 'border-blue-200' : 'border-orange-200'
+      icon: Calendar,
+      color: monthlyNet >= 0 ? 'bg-purple-500' : 'bg-yellow-500',
+      bgColor: monthlyNet >= 0 ? 'bg-purple-50' : 'bg-yellow-50',
+      change: monthlyNet >= 0 ? 'Surplus' : 'Deficit'
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-      {cards.map((card, index) => (
-        <div key={index} className={`${card.bgColor} ${card.borderColor} border rounded-lg p-4`}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">{card.title}</p>
-              <p className={`text-2xl font-bold ${card.color}`}>
-                ₹{new Intl.NumberFormat('en-IN', { notation: 'compact' }).format(Math.abs(card.value))}
-              </p>
-              {card.title === 'Net Savings' && card.value < 0 && (
-                <p className="text-xs text-gray-500">Deficit</p>
-              )}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {cards.map((card, index) => {
+        const Icon = card.icon;
+        return (
+          <div key={index} className={`${card.bgColor} border border-gray-100 rounded-2xl p-6 hover:shadow-md transition-all duration-300 hover:-translate-y-1`}>
+            <div className="flex items-center justify-between mb-4">
+              <div className={`${card.color} p-3 rounded-xl`}>
+                <Icon className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-xs font-medium text-gray-500 bg-white px-2 py-1 rounded-full">
+                {card.change}
+              </span>
             </div>
-            <div className="text-3xl">{card.icon}</div>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-gray-600">{card.title}</p>
+              <p className="text-2xl font-bold text-gray-800">
+                ₹{new Intl.NumberFormat('en-IN', { 
+                  notation: Math.abs(card.value) > 100000 ? 'compact' : 'standard' 
+                }).format(Math.abs(card.value))}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
 
-// Demo component showing all charts with sample data
 export default function ChartsDemo() {
-  // Sample data for demonstration
+  const [timeRange, setTimeRange] = useState('6M');
+  
   const categoryData = [
     { category: 'Food & Dining', total: 15000, type: 'expense' },
     { category: 'Transportation', total: 8000, type: 'expense' },
@@ -328,12 +410,12 @@ export default function ChartsDemo() {
   ];
 
   const monthlyData = [
-    { month: 'Jan 2024', income: 50000, expenses: 35000 },
-    { month: 'Feb 2024', income: 52000, expenses: 38000 },
-    { month: 'Mar 2024', income: 48000, expenses: 42000 },
-    { month: 'Apr 2024', income: 55000, expenses: 40000 },
-    { month: 'May 2024', income: 53000, expenses: 37000 },
-    { month: 'Jun 2024', income: 51000, expenses: 39000 }
+    { month: 'Jan', income: 50000, expenses: 35000 },
+    { month: 'Feb', income: 52000, expenses: 38000 },
+    { month: 'Mar', income: 48000, expenses: 42000 },
+    { month: 'Apr', income: 55000, expenses: 40000 },
+    { month: 'May', income: 53000, expenses: 37000 },
+    { month: 'Jun', income: 51000, expenses: 39000 }
   ];
 
   const summaryData = {
@@ -345,15 +427,35 @@ export default function ChartsDemo() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Financial Dashboard Charts
-          </h1>
-          <p className="text-gray-600">
-            Visualize your financial data with interactive charts and summaries
-          </p>
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Financial Overview
+            </h1>
+            <p className="text-gray-600">
+              Track your spending patterns and financial health
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="bg-white border border-gray-200 rounded-lg p-1 flex">
+              {['3M', '6M', '1Y'].map((range) => (
+                <button
+                  key={range}
+                  onClick={() => setTimeRange(range)}
+                  className={`px-3 py-1 text-sm font-medium rounded transition-colors ${
+                    timeRange === range
+                      ? 'bg-blue-500 text-white'
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  {range}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Summary Cards */}
@@ -365,27 +467,8 @@ export default function ChartsDemo() {
           <IncomeVsExpensesChart data={monthlyData} />
         </div>
 
-        {/* Full width chart */}
+        {/* Full Width Chart */}
         <MonthlySpendingChart data={monthlyData} />
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h3 className="text-lg font-semibold mb-4 text-gray-800">Integration Instructions</h3>
-          <div className="prose text-sm text-gray-600 space-y-2">
-            <p><strong>To integrate these charts into your dashboard:</strong></p>
-            <ol className="list-decimal list-inside space-y-1">
-              <li>Import the chart components you need</li>
-              <li>Pass your actual transaction data to each component</li>
-              <li>Use the API endpoints to fetch summary and category data</li>
-              <li>The components handle empty data gracefully</li>
-            </ol>
-            <p className="mt-4"><strong>Required data formats:</strong></p>
-            <ul className="list-disc list-inside space-y-1">
-              <li><strong>CategoryData:</strong> Array with category, total, and type fields</li>
-              <li><strong>MonthlyData:</strong> Array with month, income, and expenses fields</li>
-              <li><strong>Summary:</strong> Object with totals and counts</li>
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   );

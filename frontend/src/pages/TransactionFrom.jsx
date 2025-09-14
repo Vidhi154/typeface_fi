@@ -367,15 +367,7 @@ export default function TransactionForm({ onCreated }) {
         </button>
       </form>
 
-      {/* Help text */}
-      <div className="text-xs text-gray-500 space-y-1">
-        <p>💡 <strong>Tips:</strong></p>
-        <ul className="list-disc list-inside space-y-1 ml-4">
-          <li>Use specific categories to better track your spending patterns</li>
-          <li>Add descriptions to remember what the transaction was for</li>
-          <li>Upload receipts later to automatically extract transaction details</li>
-        </ul>
-      </div>
+     
     </div>
   );
 }

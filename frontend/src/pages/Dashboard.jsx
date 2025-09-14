@@ -1,46 +1,3 @@
-// import React, { useEffect, useState } from 'react';
-// import api from '../api/api';
-// import TransactionList from '../components/TransactionList';
-
-// import TransactionForm from './TransactionFrom'; 
-// import { 
-//   ChartExpensesByCategory, 
-//   MonthlySpendingChart, 
-//   IncomeVsExpensesChart, 
-//   FinancialSummaryCards 
-// } from '../components/Charts';
-// export default function Dashboard() {
-//   const [transactions, setTransactions] = useState([]);
-//   const [summary, setSummary] = useState([]);
-
-//   const fetchData = async () => {
-//     try {
-//       const res = await api.get('/transactions?limit=10&page=1');
-//       setTransactions(res.data.items || []);
-
-//       const s = await api.get('/transactions/summary/category');
-//       setSummary(s.data || []);
-//     } catch (err) {
-//       console.error("Error fetching data:", err);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-
-//   return (
-//     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-//       <div className="md:col-span-2">
-//         <TransactionForm onCreated={fetchData} />
-//         <TransactionList transactions={transactions} onDeleted={fetchData} />
-//       </div>
-//       <div>
-       
-//       </div>
-//     </div>
-//   );
-// }
 import React, { useEffect, useState } from 'react';
 import api from '../api/api';
 import TransactionList from '../components/TransactionList';
@@ -79,7 +36,6 @@ export default function Dashboard() {
         setMonthlyData(monthlyRes.data || []);
       } catch (monthlyErr) {
         console.warn('Monthly data not available:', monthlyErr);
-        // Generate sample monthly data from transactions if endpoint doesn't exist
         generateMonthlyDataFromTransactions(transactionsRes.data.items || []);
       }
 
@@ -89,7 +45,6 @@ export default function Dashboard() {
         setFinancialSummary(summaryRes.data || {});
       } catch (summaryErr) {
         console.warn('Financial summary not available:', summaryErr);
-        // Calculate summary from existing data
         calculateFinancialSummary(transactionsRes.data.items || []);
       }
 
@@ -101,7 +56,6 @@ export default function Dashboard() {
     }
   };
 
-  // Generate monthly data from transactions if API endpoint doesn't exist
   const generateMonthlyDataFromTransactions = (transactions) => {
     const monthlyMap = {};
     
@@ -123,13 +77,12 @@ export default function Dashboard() {
 
     const monthlyArray = Object.keys(monthlyMap)
       .sort()
-      .slice(-6) // Last 6 months
+      .slice(-6)
       .map(key => monthlyMap[key]);
     
     setMonthlyData(monthlyArray);
   };
 
-  // Calculate financial summary from transactions if API endpoint doesn't exist
   const calculateFinancialSummary = (transactions) => {
     const now = new Date();
     const currentMonth = now.getMonth();
@@ -174,7 +127,7 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-900 border-t-transparent mx-auto mb-4"></div>
           <p className="text-gray-600">Loading dashboard...</p>
         </div>
       </div>
@@ -184,12 +137,11 @@ export default function Dashboard() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-500 text-4xl mb-4">⚠️</div>
+        <div className="text-center bg-white rounded-lg p-8 shadow-sm border border-gray-200">
           <p className="text-red-600 mb-4">{error}</p>
           <button 
             onClick={fetchData}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-4 py-2 bg-gray-900 text-white rounded hover:bg-gray-800 transition-colors"
           >
             Try Again
           </button>
@@ -199,26 +151,26 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* Page Header */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* Header */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-gray-900">
                 Financial Dashboard
               </h1>
               <p className="text-gray-600 mt-1">
-                Track your income, expenses, and financial goals
+                Track your income and expenses
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-500">Last updated</p>
+              <p className="text-sm text-gray-500">Today</p>
               <p className="text-sm font-medium text-gray-900">
                 {new Date().toLocaleDateString('en-IN', { 
-                  weekday: 'short',
                   year: 'numeric', 
-                  month: 'short', 
+                  month: 'long', 
                   day: 'numeric' 
                 })}
               </p>
@@ -226,30 +178,32 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Financial Summary Cards */}
+        {/* Summary Cards */}
         <FinancialSummaryCards summary={financialSummary} />
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* Left Column - Transaction Form and List */}
-          <div className="xl:col-span-2 space-y-6">
-            {/* Transaction Form */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Add New Transaction
+        {/* Main Content */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          
+          {/* Left Column */}
+          <div className="space-y-8">
+            
+            {/* Add Transaction */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                Add Transaction
               </h2>
               <TransactionForm onCreated={fetchData} />
             </div>
 
             {/* Recent Transactions */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold text-gray-900">
                   Recent Transactions
                 </h2>
                 <a 
                   href="/transactions" 
-                  className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                  className="text-gray-600 hover:text-gray-900 font-medium"
                 >
                   View All →
                 </a>
@@ -260,58 +214,56 @@ export default function Dashboard() {
                 showPagination={false}
               />
               {transactions.length === 0 && (
-                <div className="text-center py-8 text-gray-500">
-                  <div className="text-4xl mb-2">💳</div>
+                <div className="text-center py-12 text-gray-500">
                   <p>No transactions yet</p>
-                  <p className="text-sm">Add your first transaction above</p>
+                  <p className="text-sm mt-1">Add your first transaction above</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Right Column - Charts */}
-          <div className="space-y-6">
-            {/* Expenses by Category Chart */}
-            <ChartExpensesByCategory data={summary} />
-
-            {/* Quick Stats */}
-            <div className="bg-white rounded-lg shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Quick Stats
+          {/* Right Column */}
+          <div className="space-y-8">
+            
+            {/* Key Metrics */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">
+                Key Metrics
               </h3>
               <div className="space-y-4">
                 {financialSummary.totalIncome > 0 && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Savings Rate</span>
-                    <span className="font-semibold text-green-600">
+                  <div className="flex justify-between items-center p-4 bg-gray-50 rounded border border-gray-100">
+                    <span className="text-gray-700 font-medium">Savings Rate</span>
+                    <span className="font-semibold text-gray-900">
                       {((financialSummary.totalIncome - financialSummary.totalExpenses) / financialSummary.totalIncome * 100).toFixed(1)}%
                     </span>
                   </div>
                 )}
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total Transactions</span>
-                  <span className="font-semibold">{transactions.length}</span>
+                <div className="flex justify-between items-center p-4 bg-gray-50 rounded border border-gray-100">
+                  <span className="text-gray-700 font-medium">Total Transactions</span>
+                  <span className="font-semibold text-gray-900">{transactions.length}</span>
                 </div>
                 {summary.length > 0 && (
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Top Category</span>
-                    <span className="font-semibold">
+                  <div className="flex justify-between items-center p-4 bg-gray-50 rounded border border-gray-100">
+                    <span className="text-gray-700 font-medium">Top Category</span>
+                    <span className="font-semibold text-gray-900">
                       {summary[0]?.category || summary[0]?._id || 'N/A'}
                     </span>
                   </div>
                 )}
               </div>
             </div>
+
+            {/* Category Breakdown */}
+            <ChartExpensesByCategory data={summary} />
           </div>
         </div>
 
-        {/* Bottom Row - Full Width Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <IncomeVsExpensesChart data={monthlyData} />
           <MonthlySpendingChart data={monthlyData} />
         </div>
-
-       
       </div>
     </div>
   );
