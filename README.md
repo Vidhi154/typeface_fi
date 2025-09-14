@@ -33,7 +33,7 @@ https://github.com/user-attachments/assets/2495ddc5-d83a-496a-bd60-1fb920ad2f12
 - 🟢 **Node.js + Express** (REST API)  
 - 📦 **Mongoose** (MongoDB ODM)  
 - 📤 **Multer** (file uploads for receipts)  
-- 🔍 *(Optional)* **Tesseract.js / AWS Textract** (OCR for receipt scanning)  
+- 🔍 **Tesseract.js** (OCR for receipt scanning)  
 
 ### 🗄️ Database  
 - 🍃 **MongoDB**  
@@ -54,8 +54,7 @@ https://github.com/user-attachments/assets/2495ddc5-d83a-496a-bd60-1fb920ad2f12
 ✅ View transactions by **date range**  
 ✅ **Graphs & Charts**: Spending trends, expenses by category, income vs expenses  
 ✅ Upload receipts & auto-extract expenses via **OCR**  
-✅ Multi-user support with **JWT Auth**  
-✅ Bonus: Import transaction history from **PDF**  
+✅ Multi-user support with **JWT Auth** 
 ✅ Bonus: Pagination for large transaction lists  
 
 ---
@@ -193,6 +192,7 @@ my-fullstack-app/
 - **Expense breakdown** by category
 - **Monthly comparisons** 
 - **Savings rate** calculations
+
 
 
 
