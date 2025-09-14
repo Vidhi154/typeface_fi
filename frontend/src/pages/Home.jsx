@@ -19,8 +19,7 @@ export default function Home() {
             </h1>
             
             <p className="max-w-3xl mx-auto text-xl text-gray-600 mb-8 leading-relaxed">
-              Take control of your finances with our comprehensive tracking system. 
-              Monitor income, expenses, and spending patterns to make informed financial decisions.
+              Track every rupee, understand your habits, and build better money decisions.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
@@ -37,13 +36,13 @@ export default function Home() {
                     to="/register"
                     className="px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
-                    Get Started Free
+                   Create an account
                   </Link>
                   <Link
                     to="/login"
                     className="px-8 py-4 border-2 border-blue-600 text-blue-600 rounded-xl font-semibold hover:bg-blue-50 transform hover:scale-105 transition-all duration-200"
                   >
-                    Sign In
+                    Login
                   </Link>
                 </>
               )}

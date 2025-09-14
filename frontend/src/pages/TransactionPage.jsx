@@ -2,15 +2,19 @@ import React, { useEffect, useState, useContext } from "react";
 import api from "../api/api";
 import TransactionList from "../components/TransactionList";
 import { AuthContext } from "../contexts/AuthContext";
-import ReceiptUpload from '../components/ReceiptUpload';
+import ReceiptUpload from "../components/ReceiptUpload";
 
 const filters = [
   { label: "Last 7 days", value: "7d" },
   { label: "Last 30 days", value: "30d" },
   { label: "Last 6 months", value: "6m" },
   { label: "Last 1 year", value: "1y" },
+  { label: "Group by Day", value: "group_day" },
+  { label: "Group by Week", value: "group_week" },
+  { label: "Group by Month", value: "group_month" },
   { label: "All", value: "all" },
 ];
+
 
 export default function TransactionsPage() {
   const { user } = useContext(AuthContext);
@@ -18,7 +22,7 @@ export default function TransactionsPage() {
   const [filter, setFilter] = useState("all");
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(1);
-  const limit = 5; // number of transactions per page
+  const limit = 5;
 
   // Build query string based on filter
   const buildQuery = (filter) => {
@@ -35,10 +39,14 @@ export default function TransactionsPage() {
       startDate = new Date(now.setFullYear(now.getFullYear() - 1));
     }
 
+    if (filter.startsWith("group_")) {
+      return `groupBy=${filter.replace("group_", "")}`;
+    }
+
     return startDate ? `startDate=${startDate.toISOString()}` : "";
   };
 
-  // Fetch transactions from API
+  // Fetch transactions
   const fetchTransactions = async () => {
     try {
       const query = buildQuery(filter);
@@ -68,7 +76,7 @@ export default function TransactionsPage() {
             value={filter}
             onChange={(e) => {
               setFilter(e.target.value);
-              setPage(1); // reset page on filter change
+              setPage(1);
             }}
             className="border rounded p-2"
           >
@@ -85,10 +93,13 @@ export default function TransactionsPage() {
           <ReceiptUpload onUploaded={fetchTransactions} />
         </div>
 
-        {/* Transaction list */}
-        <TransactionList transactions={transactions} onDeleted={fetchTransactions} />
+        {/* Transaction List */}
+        <TransactionList
+          transactions={transactions}
+          onDeleted={fetchTransactions}
+        />
 
-        {/* Pagination Controls */}
+        {/* Pagination */}
         {pages > 1 && (
           <div className="flex justify-center items-center gap-3 mt-6">
             <button
